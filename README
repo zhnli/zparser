@@ -1,0 +1,9 @@
+ZParser by zhli
+
+===============
+= Known issues:
+
+== Failed to parse "unified_log".
+=== Symptom: Diagram is blank. No error given.
+=== Reason: In the file, \r\n have been replaced with "^M", which caused PDU parsing to fail.
+=== Solution: Replace "^M" with "\r\n".
