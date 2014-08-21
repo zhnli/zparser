@@ -1,5 +1,6 @@
 #!/bin/sh
 
+INSTALL=0
 PRGMPATH=`pwd`
 BUILDPATH=_build
 CONVERTEDPATH=_build/converted
@@ -54,35 +55,47 @@ prepare () {
 }
 
 build_basic () {
-    echo "Installing basic ..."
+    echo "Building basic ..."
     clean
     prepare
     convert_basic
     minify_js
-    sudo cp $CONVERTEDPATH/zparser.html $DEPLOYPATH/index.html
-    sudo cp $MINIFIEDPATH/zparser.min.js $DEPLOYPATHJS
-    sudo cp $MINIFIEDPATH/zdiagram.min.js $DEPLOYPATHJS
+
+    if [ ${INSTALL} -eq 1 ]; then
+        echo "Installing basic ..."
+        sudo cp $CONVERTEDPATH/zparser.html $DEPLOYPATH/index.html
+        sudo cp $MINIFIEDPATH/zparser.min.js $DEPLOYPATHJS
+        sudo cp $MINIFIEDPATH/zdiagram.min.js $DEPLOYPATHJS
+    fi
 }
 
 build_ext () {
-    echo "Installing ext ..."
+    echo "Building ext ..."
     clean
     prepare
     convert_ext
     minify_js
-    sudo cp $CONVERTEDPATH/zparser.html $DEPLOYPATH/index.html
-    sudo cp $MINIFIEDPATH/zparser.min.js $DEPLOYPATHJS
-    sudo cp $MINIFIEDPATH/zdiagram.min.js $DEPLOYPATHJS
+
+    if [ ${INSTALL} -eq 1 ]; then
+        echo "Installing ext ..."
+        sudo cp $CONVERTEDPATH/zparser.html $DEPLOYPATH/index.html
+        sudo cp $MINIFIEDPATH/zparser.min.js $DEPLOYPATHJS
+        sudo cp $MINIFIEDPATH/zdiagram.min.js $DEPLOYPATHJS
+    fi
 }
 
 build_dev () {
-    echo "Installing dev ..."
+    echo "Building dev ..."
     clean
     prepare
     convert_dev
-    sudo cp $CONVERTEDPATH/zparser.html $DEPLOYPATH/index.html
-    sudo cp $CONVERTEDPATH/zparser.js $DEPLOYPATHJS
-    sudo cp $CONVERTEDPATH/zdiagram.js $DEPLOYPATHJS
+
+    if [ ${INSTALL} -eq 1 ]; then
+        echo "Installing dev ..."
+        sudo cp $CONVERTEDPATH/zparser.html $DEPLOYPATH/index.html
+        sudo cp $CONVERTEDPATH/zparser.js $DEPLOYPATHJS
+        sudo cp $CONVERTEDPATH/zdiagram.js $DEPLOYPATHJS
+    fi
 }
 
 clean () {
@@ -128,11 +141,13 @@ do
     case $KEY in
     -h|--help)
         showhelp
-        shift
         ;;
     -t|--target)
         TARGET="$1"
         shift
+        ;;
+    --install)
+        INSTALL=1
         ;;
     --clean)
         clean
